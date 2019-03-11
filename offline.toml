@@ -1,0 +1,36 @@
+[build.branches]
+PredictMD = ["develop", "master",]
+PredictMDExtra = ["develop", "master",]
+PredictMDFull = ["develop", "master",]
+
+[build.versions]
+AutoGrad = ["1.0.0", "1.1.0",]
+Knet = ["1.0.0", "1.1.0",]
+
+[git.config.user]
+email = "bcbi@brown.edu"
+name = "Brown Center for Biomedical Informatics"
+
+[package]
+build = ["PredictMD", "PredictMDExtra", "PredictMDFull",]
+exclude = ["julia", "LibGit2",]
+
+[registry]
+include = [
+    "https://github.com/bcbi/PredictMDRegistry",
+    "https://github.com/JuliaRegistries/General",
+]
+
+[toml.manifest]
+include = [
+    "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Manifest.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Manifest.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Manifest.toml",
+]
+
+[toml.project]
+include = [
+    "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Project.toml",
+]
