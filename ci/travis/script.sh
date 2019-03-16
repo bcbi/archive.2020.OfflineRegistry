@@ -53,6 +53,20 @@ julia $JULIA_FLAGS -e '
     Pkg.add("StatsBase");
     '
 
+rm -rf $HOME/.julia
+julia $JULIA_FLAGS -e '
+    include("startup.jl");
+    include("default-environment.jl");
+    '
+julia $JULIA_FLAGS -e '
+    include("startup.jl");
+    include("default-environment.jl");
+    '
+julia $JULIA_FLAGS -e '
+    include("startup.jl");
+    include("default-environment.jl");
+    '
+
 julia $JULIA_FLAGS $TRAVIS_BUILD_DIR/clean.jl
 
 ##### End of file
