@@ -228,13 +228,14 @@ for i = 1:n
                                     )
                             end
                         end
-                    catch e
-                        @warn("ignoring exception: ", e,)
-                    end
-                    try
-                        close(remote)
-                    catch e
-                        @warn("ignoring exception: ", e,)
+                    catch e1
+                        @warn("ignoring exception: ", e1,)
+                    finally
+                        try
+                            close(remote)
+                        catch e2
+                            @warn("ignoring exception: ", e2,)
+                        end
                     end
                 end
             end
