@@ -1,0 +1,8 @@
+name = "OfflineRegistry"
+uuid = "5f0113b2-209d-4589-82ac-1def848560e1"
+repo = "https://github.com/DilumAluthge/PredictMDRegistryOffline.git"
+
+description = """
+This registry allows you to use PredictMD and other Julia packages
+behind a firewall.
+"""
