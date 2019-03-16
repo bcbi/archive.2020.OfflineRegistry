@@ -280,7 +280,7 @@ original_depot_path = [x for x in Base.DEPOT_PATH]
 my_depot = joinpath(project_root, "depot",)
 my_environment = joinpath(project_root, "environments", "temporary",)
 rm(my_depot; force = true, recursive = true,)
-rm(my_environment; force = true, recursive = true,)
+rm(my_environment;force = true,recursive = true,)
 empty!(Base.DEPOT_PATH)
 pushfirst!(Base.DEPOT_PATH, my_depot,)
 Pkg.activate(my_environment)
@@ -345,11 +345,7 @@ for i = 1:n
         Pkg.add(Pkg.PackageSpec(name=name, rev=branch,))
     end
 end
-rm(
-    my_environment;
-    force = true,
-    recursive = true,
-    )
+rm(my_environment;force = true,recursive = true,)
 
 empty!(Base.DEPOT_PATH)
 for x in original_depot_path
