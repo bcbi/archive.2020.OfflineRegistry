@@ -1,13 +1,22 @@
 import Pkg
 
-mkpath(
-    joinpath(
-        homedir(),
-        ".julia",
-        "environments",
-        string("v", VERSION.major, ".", VERSION.minor,),
+if !isdir(
+        joinpath(
+            homedir(),
+            ".julia",
+            "environments",
+            string("v", VERSION.major, ".", VERSION.minor,),
+            )
         )
-    )
+    mkpath(
+        joinpath(
+            homedir(),
+            ".julia",
+            "environments",
+            string("v", VERSION.major, ".", VERSION.minor,),
+            )
+        )
+end
 
 Pkg.activate(
     joinpath(
