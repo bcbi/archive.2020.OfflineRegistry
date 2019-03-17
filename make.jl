@@ -105,7 +105,7 @@ for i = 1:n
     registry_packages_uuids = collect(keys(registry_packages))
     p = length(registry_packages_uuids)
     for j = 1:p
-        @debug("Processing package $(j) of $(p)")
+        # @debug("Processing package $(j) of $(p)")
         uuid = registry_packages_uuids[j]
         name = registry_packages[uuid]["name"]
         if !(name in exclude)
@@ -161,7 +161,7 @@ for i = 1:n
                     )
             end
             if name in packages_to_clone
-                @debug("Cloning registry $(i) of $(n)")
+                @debug("Cloning package $(j) of $(p)")
                 mkpath(repo_destination)
                 tmp = mktempdir()
                 Base.shred!(LibGit2.CachedCredentials()) do creds
@@ -347,11 +347,14 @@ for i = 1:n
 end
 rm(my_environment;force = true,recursive = true,)
 
+rm(joinpath(my_depot, "compiled",);force = true,recursive = true,)
+
 empty!(Base.DEPOT_PATH)
 for x in original_depot_path
     push!(Base.DEPOT_PATH, x,)
 end
 unique!(Base.DEPOT_PATH)
+
 @info("successfully added packages to depot and built packages")
 
 cd(original_directory)
