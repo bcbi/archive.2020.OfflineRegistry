@@ -56,6 +56,10 @@ append!(
     )
 append!(
     packages_to_clone,
+    strip.(configuration["package"]["warmup"]),
+    )
+append!(
+    packages_to_clone,
     strip.(collect(keys(configuration["build"]["branches"]))),
     )
 append!(
@@ -105,7 +109,6 @@ for i = 1:n
     registry_packages_uuids = collect(keys(registry_packages))
     p = length(registry_packages_uuids)
     for j = 1:p
-        # @debug("Processing package $(j) of $(p)")
         uuid = registry_packages_uuids[j]
         name = registry_packages[uuid]["name"]
         if !(name in exclude)
@@ -285,6 +288,11 @@ empty!(Base.DEPOT_PATH)
 pushfirst!(Base.DEPOT_PATH, my_depot,)
 Pkg.activate(my_environment)
 Pkg.Registry.add(Pkg.RegistrySpec(path=project_root,))
+packages_to_warmup = sort(
+    unique(
+        strip.(configuration["package"]["warmup"])
+        )
+    )
 n = length(packages_to_clone)
 for i = 1:n
     @debug("Building package $(i) of $(n)")
@@ -300,6 +308,20 @@ for i = 1:n
         recursive = true,
         )
     Pkg.add(name)
+    for package_to_warmup in intersect(
+            packages_to_warmup,
+            keys(
+                Pkg.TOML.parsefile(
+                    joinpath(my_environment, "Manifest.toml",)
+                    )
+                ),
+            )
+        Pkg.add(package_to_warmup)
+        Base.eval(
+            Main,
+            Base.Meta.parse("import $(package_to_warmup)"),
+            )
+    end
 end
 versions_to_build = configuration["build"]["versions"]
 versions_to_build_names = collect(keys(versions_to_build))
