@@ -4,8 +4,7 @@ PredictMDExtra = ["develop", "master",]
 PredictMDFull = ["develop", "master",]
 
 [build.versions]
-AutoGrad = ["1.0.0", "1.1.0",]
-Knet = ["1.0.0", "1.1.0",]
+MbedTLS = ["0.6.6", "0.6.8",]
 
 [git.config.user]
 email = "bcbi@brown.edu"
