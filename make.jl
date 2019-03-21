@@ -48,36 +48,87 @@ for url in configuration["registry"]["include"]
 end
 @info("successfully cloned all registries")
 
-@info("cloning package repositories...")
-packages_to_clone = String[]
+@info("processing the manifests of the given packages")
+packages_to_manifest_process = String[]
 append!(
-    packages_to_clone,
+    packages_to_manifest_process,
     strip.(configuration["package"]["build"]),
     )
 append!(
-    packages_to_clone,
+    packages_to_manifest_process,
     strip.(configuration["package"]["warmup"]),
     )
 append!(
-    packages_to_clone,
+    packages_to_manifest_process,
     strip.(collect(keys(configuration["build"]["branches"]))),
     )
 append!(
-    packages_to_clone,
+    packages_to_manifest_process,
     strip.(collect(keys(configuration["build"]["versions"]))),
     )
 for file in manifests_downloads
     append!(
-        packages_to_clone,
+        packages_to_manifest_process,
         sort(unique(strip.(collect(keys(Pkg.TOML.parsefile(file)))))),
         )
 end
 for file in projects_downloads
     append!(
-        packages_to_clone,
+        packages_to_manifest_process,
         sort(unique(strip.(collect(keys(Pkg.TOML.parsefile(file)["deps"]))))),
         )
 end
+unique!(packages_to_manifest_process)
+sort!(packages_to_manifest_process)
+original_depot_path = [x for x in Base.DEPOT_PATH]
+my_depot = joinpath(project_root, "depot",)
+my_environment = joinpath(project_root, "environments", "temporary",)
+rm(my_depot; force = true, recursive = true,)
+rm(my_environment;force = true,recursive = true,)
+empty!(Base.DEPOT_PATH)
+pushfirst!(Base.DEPOT_PATH, my_depot,)
+Pkg.activate(my_environment)
+results_of_manifest_processing = String[]
+for url in configuration["registry"]["include"]
+    Pkg.Registry.add(Pkg.RegistrySpec(url=url,))
+end
+Pkg.Registry.update()
+for name in packages_to_manifest_process
+    rm(
+        joinpath(my_environment, "Project.toml",);
+        force = true,
+        recursive = true,
+        )
+    rm(
+        joinpath(my_environment, "Manifest.toml",);
+        force = true,
+        recursive = true,
+        )
+    Pkg.add(name)
+    environment_manifest_contents = Pkg.TOML.parsefile(
+        joinpath(my_environment, "Manifest.toml",)
+        )
+    append!(
+        results_of_manifest_processing,
+        strip.(collect(keys(environment_manifest_contents))),
+        )
+end
+rm(my_depot; force = true, recursive = true,)
+rm(my_environment;force = true,recursive = true,)
+unique!(results_of_manifest_processing)
+sort!(results_of_manifest_processing)
+@info("finished processing the manifests of the given packages")
+
+@info("cloning package repositories...")
+packages_to_clone = String[]
+append!(
+    packages_to_clone,
+    strip.(packages_to_manifest_process),
+    )
+append!(
+    packages_to_clone,
+    strip.(results_of_manifest_processing),
+    )
 unique!(packages_to_clone)
 sort!(packages_to_clone)
 @debug("Packages to clone ($(length(packages_to_clone))): ")
@@ -279,9 +330,6 @@ end
 @info("successfully committed all changes")
 
 @info("adding packages to depot and building packages...")
-original_depot_path = [x for x in Base.DEPOT_PATH]
-my_depot = joinpath(project_root, "depot",)
-my_environment = joinpath(project_root, "environments", "temporary",)
 rm(my_depot; force = true, recursive = true,)
 rm(my_environment;force = true,recursive = true,)
 empty!(Base.DEPOT_PATH)
