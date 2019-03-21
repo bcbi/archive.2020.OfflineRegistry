@@ -22,11 +22,7 @@ include = [
 ]
 
 [toml.manifest]
-include = [
-    "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Manifest.toml",
-    "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Manifest.toml",
-    "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Manifest.toml",
-]
+include = []
 
 [toml.project]
 include = [
