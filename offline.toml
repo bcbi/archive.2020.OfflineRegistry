@@ -7,8 +7,8 @@ PredictMDFull = ["develop", "master",]
 MbedTLS = ["0.6.6", "0.6.8",]
 
 [git.config.user]
-email = "bcbi@brown.edu"
-name = "Brown Center for Biomedical Informatics"
+email = "noreply@aluthge.com"
+name = "Dilum Aluthge"
 
 [package]
 build = ["PredictMD", "PredictMDExtra", "PredictMDFull",]
