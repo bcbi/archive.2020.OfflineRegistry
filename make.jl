@@ -356,6 +356,11 @@ for i = 1:n
         recursive = true,
         )
     Pkg.add(name)
+    try
+        Pkg.build(name; verbose = true,)
+    catch e1
+        @warn("ignoring exception: ", e1,)
+    end
     for package_to_warmup in intersect(
             packages_to_warmup,
             keys(
@@ -365,6 +370,11 @@ for i = 1:n
                 ),
             )
         Pkg.add(package_to_warmup)
+        try
+            Pkg.build(package_to_warmup; verbose = true,)
+        catch e2
+            @warn("ignoring exception: ", e2,)
+        end
         Base.eval(
             Main,
             Base.Meta.parse("import $(package_to_warmup)"),
@@ -392,6 +402,30 @@ for i = 1:n
             recursive = true,
             )
         Pkg.add(Pkg.PackageSpec(name=name, version=version,))
+        try
+            Pkg.build(name; verbose = true,)
+        catch e1
+            @warn("ignoring exception: ", e1,)
+        end
+        for package_to_warmup in intersect(
+                packages_to_warmup,
+                keys(
+                    Pkg.TOML.parsefile(
+                        joinpath(my_environment, "Manifest.toml",)
+                        )
+                    ),
+                )
+            Pkg.add(package_to_warmup)
+            try
+                Pkg.build(package_to_warmup; verbose = true,)
+            catch e2
+                @warn("ignoring exception: ", e2,)
+            end
+            Base.eval(
+                Main,
+                Base.Meta.parse("import $(package_to_warmup)"),
+                )
+        end
     end
 end
 n = length(branches_to_build_names)
@@ -413,6 +447,30 @@ for i = 1:n
             recursive = true,
             )
         Pkg.add(Pkg.PackageSpec(name=name, rev=branch,))
+        try
+            Pkg.build(name; verbose = true,)
+        catch e1
+            @warn("ignoring exception: ", e1,)
+        end
+        for package_to_warmup in intersect(
+                packages_to_warmup,
+                keys(
+                    Pkg.TOML.parsefile(
+                        joinpath(my_environment, "Manifest.toml",)
+                        )
+                    ),
+                )
+            Pkg.add(package_to_warmup)
+            try
+                Pkg.build(package_to_warmup; verbose = true,)
+            catch e2
+                @warn("ignoring exception: ", e2,)
+            end
+            Base.eval(
+                Main,
+                Base.Meta.parse("import $(package_to_warmup)"),
+                )
+        end
     end
 end
 rm(my_environment;force = true,recursive = true,)
