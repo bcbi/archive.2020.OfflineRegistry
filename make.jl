@@ -6,6 +6,15 @@ original_directory = pwd()
 project_root = joinpath(splitpath(@__DIR__)...)
 cd(project_root)
 
+rm(
+    joinpath(project_root, "STARTED",);
+    force = true,
+    recursive = true,
+    )
+open(joinpath(project_root, "STARTED",), "w",) do f
+    write(f, "$(repr(Dates.now()))\n",)
+end
+
 @info("parsing `offline.toml`...")
 configuration = Pkg.TOML.parsefile("offline.toml")
 @info("successfully parsed `offline.toml`...")
@@ -482,5 +491,14 @@ end
 unique!(Base.DEPOT_PATH)
 
 @info("successfully added packages to depot and built packages")
+
+rm(
+    joinpath(project_root, "FINISHED",);
+    force = true,
+    recursive = true,
+    )
+open(joinpath(project_root, "FINISHED",), "w",) do f
+    write(f, "$(repr(Dates.now()))\n",)
+end
 
 cd(original_directory)
