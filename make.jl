@@ -234,8 +234,6 @@ for i = 1:n
                     repo_destination;
                     force = true,
                     )
-                @debug("name: ", name,)
-                @debug("branches_to_build_names: ", branches_to_build_names,)
                 if name in branches_to_build_names
                     branches = branches_to_build[name]
                     repo = LibGit2.GitRepo(repo_destination)
