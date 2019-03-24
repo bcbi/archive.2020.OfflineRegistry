@@ -12,7 +12,7 @@ rm(
     recursive = true,
     )
 open(joinpath(project_root, "STARTED",), "w",) do f
-    write(f, "$repr(Dates.now())\n",)
+    write(f, "$(repr(Dates.now()))\n",)
 end
 
 @info("parsing `offline.toml`...")
@@ -500,7 +500,7 @@ rm(
     recursive = true,
     )
 open(joinpath(project_root, "FINISHED",), "w",) do f
-    write(f, "$repr(Dates.now())\n",)
+    write(f, "$(repr(Dates.now()))\n",)
 end
 
 cd(original_directory)
