@@ -37,5 +37,4 @@ include = [
     "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/develop/Project.toml",
     "https://raw.githubusercontent.com/UnofficialJuliaMirror/MirrorUpdater.jl/master/Project.toml",
     "https://raw.githubusercontent.com/UnofficialJuliaMirrorSnapshots/Snapshots.jl/master/Project.toml",
-    "https://raw.githubusercontent.com/bcbi/PredictMDRegistry/master/ci/RegistryTestingTools/Project.toml",
 ]
