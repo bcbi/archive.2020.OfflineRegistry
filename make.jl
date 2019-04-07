@@ -506,7 +506,7 @@ rm(my_environment;force = true,recursive = true,)
 
 moved_out_of_depot_dir = joinpath(
     project_root,
-    "moved_out_of_depot",
+    "movedoutofdepot",
     )
 moved_out_of_depot_packages_dir = joinpath(
     moved_out_of_depot_dir,
