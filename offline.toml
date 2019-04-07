@@ -4,7 +4,6 @@ PredictMDExtra = ["develop", "master",]
 PredictMDFull = ["develop", "master",]
 
 [build.versions]
-MbedTLS = ["0.6.6", "0.6.8",]
 PredictMD = ["0.26.0",]
 PredictMDExtra = ["0.6.0",]
 PredictMDFull = ["0.6.0",]
@@ -16,6 +15,7 @@ name = "Dilum Aluthge"
 [package]
 build = ["PredictMD", "PredictMDExtra", "PredictMDFull",]
 exclude = ["julia", "LibGit2",]
+move_out_of_depot = ["JuliaInterpreter",]
 warmup = ["DataDeps", "Flux", "JuliaInterpreter",]
 
 [registry]

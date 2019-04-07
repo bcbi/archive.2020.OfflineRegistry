@@ -504,7 +504,45 @@ for i = 1:n
 end
 rm(my_environment;force = true,recursive = true,)
 
+moved_out_of_depot_dir = joinpath(
+    project_root,
+    "movedoutofdepot",
+    )
+moved_out_of_depot_packages_dir = joinpath(
+    moved_out_of_depot_dir,
+    "packages",
+    )
+move_out_of_depot_list = configuration["package"]["move_out_of_depot"]
+unique!(move_out_of_depot_list)
+sort!(move_out_of_depot_list)
+n = length(move_out_of_depot_list)
+for i = 1:n
+    name = move_out_of_depot_list[i]
+    @debug("Removing \"$(name)\" ($(i) of $(n)) from depot")
+    old_package_path = joinpath(
+        my_depot,
+        "packages",
+        name,
+        )
+    new_package_path = joinpath(
+        moved_out_of_depot_packages_dir,
+        name,
+        )
+    rm(
+        new_package_path;
+        force = true,
+        recursive = true,
+        )
+    mkpath(moved_out_of_depot_packages_dir)
+    mv(
+        old_package_path,
+        new_package_path;
+        force = true,
+        )
+end
+
 rm(joinpath(my_depot, "compiled",);force = true,recursive = true,)
+rm(my_environment;force = true,recursive = true,)
 
 empty!(Base.DEPOT_PATH)
 for x in original_depot_path
