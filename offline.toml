@@ -1,25 +1,22 @@
 [build.branches]
-# PredictMD = ["develop", "master",]
-# PredictMDExtra = ["develop", "master",]
-# PredictMDFull = ["develop", "master",]
+PredictMD = ["develop", "master",]
+PredictMDExtra = ["develop", "master",]
+PredictMDFull = ["develop", "master",]
 
 [build.versions]
-MbedTLS = ["0.6.6", "0.6.8",]
-# PredictMD = ["0.26.0",]
-# PredictMDExtra = ["0.6.0",]
-# PredictMDFull = ["0.6.0",]
+PredictMD = ["0.26.0",]
+PredictMDExtra = ["0.6.0",]
+PredictMDFull = ["0.6.0",]
 
 [git.config.user]
 email = "noreply@aluthge.com"
 name = "Dilum Aluthge"
 
 [package]
-# build = ["PredictMD", "PredictMDExtra", "PredictMDFull",]
-build = ["JuliaInterpreter"]
+build = ["PredictMD", "PredictMDExtra", "PredictMDFull",]
 exclude = ["julia", "LibGit2",]
 move_out_of_depot = ["JuliaInterpreter",]
-# warmup = ["DataDeps", "Flux", "JuliaInterpreter",]
-warmup = ["JuliaInterpreter",]
+warmup = ["DataDeps", "Flux", "JuliaInterpreter",]
 
 [registry]
 include = [
@@ -31,14 +28,13 @@ include = [
 include = []
 
 [toml.project]
-include = []
-# include = [
-#     "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Project.toml",
-#     "https://raw.githubusercontent.com/bcbi/PredictMD.jl/develop/Project.toml",
-#     "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Project.toml",
-#     "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/develop/Project.toml",
-#     "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Project.toml",
-#     "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/develop/Project.toml",
-#     "https://raw.githubusercontent.com/UnofficialJuliaMirror/MirrorUpdater.jl/master/Project.toml",
-#     "https://raw.githubusercontent.com/UnofficialJuliaMirrorSnapshots/Snapshots.jl/master/Project.toml",
-# ]
+include = [
+    "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMD.jl/develop/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/develop/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/develop/Project.toml",
+    "https://raw.githubusercontent.com/UnofficialJuliaMirror/MirrorUpdater.jl/master/Project.toml",
+    "https://raw.githubusercontent.com/UnofficialJuliaMirrorSnapshots/Snapshots.jl/master/Project.toml",
+]
