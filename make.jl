@@ -518,7 +518,7 @@ sort!(move_out_of_depot_list)
 n = length(move_out_of_depot_list)
 for i = 1:n
     name = move_out_of_depot_list[i]
-    @debug("Removing \"$(name)\" ($(i) of $(n)) from depot")
+    @debug("Moving \"$(name)\" ($(i) of $(n)) out of depot")
     old_package_path = joinpath(
         my_depot,
         "packages",
