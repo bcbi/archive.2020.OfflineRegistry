@@ -504,7 +504,6 @@ for i = 1:n
 end
 rm(my_environment;force = true,recursive = true,)
 
-# my_depot = joinpath(project_root, "depot",)
 moved_out_of_depot_dir = joinpath(
     project_root,
     "moved_out_of_depot",
@@ -513,15 +512,9 @@ moved_out_of_depot_packages_dir = joinpath(
     moved_out_of_depot_dir,
     "packages",
     )
+move_out_of_depot_list = configuration["package"]["move_out_of_depot"]
 unique!(move_out_of_depot_list)
 sort!(move_out_of_depot_list)
-mkpath(
-    joinpath(
-        moved_out_of_depot_dir,
-        "packages",
-        )
-    )
-    move_out_of_depot_list = configuration["package"]["move_out_of_depot"]
 n = length(move_out_of_depot_list)
 for i = 1:n
     name = move_out_of_depot_list[i]
