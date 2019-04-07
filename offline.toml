@@ -5,6 +5,9 @@ PredictMDFull = ["develop", "master",]
 
 [build.versions]
 MbedTLS = ["0.6.6", "0.6.8",]
+PredictMD = ["0.26.0",]
+PredictMDExtra = ["0.6.0",]
+PredictMDFull = ["0.6.0",]
 
 [git.config.user]
 email = "noreply@aluthge.com"
