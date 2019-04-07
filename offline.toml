@@ -16,7 +16,7 @@ name = "Dilum Aluthge"
 [package]
 build = ["PredictMD", "PredictMDExtra", "PredictMDFull",]
 exclude = ["julia", "LibGit2",]
-warmup = ["DataDeps", "Flux",]
+warmup = ["DataDeps", "Flux", "JuliaInterpreter",]
 
 [registry]
 include = [
