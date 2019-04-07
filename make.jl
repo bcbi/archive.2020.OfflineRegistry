@@ -78,15 +78,37 @@ append!(
 for file in manifests_downloads
     append!(
         packages_to_manifest_process,
-        sort(unique(strip.(collect(keys(Pkg.TOML.parsefile(file)))))),
+        sort(
+            unique(strip.(collect(keys(Pkg.TOML.parsefile(file)))))
+            ),
         )
 end
 for file in projects_downloads
     append!(
         packages_to_manifest_process,
-        sort(unique(strip.(collect(keys(Pkg.TOML.parsefile(file)["deps"]))))),
+        sort(
+            unique(strip.(collect(keys(Pkg.TOML.parsefile(file)["deps"]))))
+            ),
         )
 end
+my_own_project_toml_file = joinpath(
+    project_root,
+    "Project.toml",
+    )
+append!(
+    packages_to_manifest_process,
+    sort(
+        unique(
+            strip.(
+                collect(
+                    keys(
+                        Pkg.TOML.parsefile(my_own_project_toml_file)["deps"]
+                        )
+                    )
+                )
+            )
+        ),
+    )
 unique!(packages_to_manifest_process)
 sort!(packages_to_manifest_process)
 original_depot_path = [x for x in Base.DEPOT_PATH]
