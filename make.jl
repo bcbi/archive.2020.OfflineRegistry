@@ -40,6 +40,7 @@ end
 
 @info("cloning registries...")
 registries_clones = String[]
+packages_from_registries_to_clone_all_packages = String[]
 for url in configuration["registry"]["include"]
     tmp = mktempdir()
     push!(registries_clones, tmp,)
@@ -54,7 +55,30 @@ for url in configuration["registry"]["include"]
             ) do repo
         end
     end
+    registry_toml_file_path = joinpath(
+        tmp,
+        "Registry.toml",
+        )
+    registry_toml_file_parsed = Pkg.TOML.parsefile(
+        registry_toml_file_path
+        )
+    registry_name = registry_toml_file_parsed["name"]
+    registry_uuid = registry_toml_file_parsed["uuid"]
+    if registry_name in
+            keys(configuration["clone_all_packages_in_registry"])
+        if registry_uuid ==
+                configuration["clone_all_packages_in_registry"][registry_name]
+            append!(
+                packages_from_registries_to_clone_all_packages,
+                [x["name"] for x in
+                    collect(values(registry_toml_file_parsed["packages"]))],
+                )
+        end
+    end
+    unique!(packages_from_registries_to_clone_all_packages)
 end
+unique!(packages_from_registries_to_clone_all_packages)
+sort!(packages_from_registries_to_clone_all_packages)
 @info("successfully cloned all registries")
 
 @info("processing the manifests of the given packages")
@@ -152,6 +176,10 @@ sort!(results_of_manifest_processing)
 
 @info("cloning package repositories...")
 packages_to_clone = String[]
+append!(
+    packages_to_clone,
+    strip.(packages_from_registries_to_clone_all_packages),
+    )
 append!(
     packages_to_clone,
     strip.(packages_to_manifest_process),
@@ -339,6 +367,13 @@ open(registry_toml_path, "w") do f
 end
 @info("successfully wrote Registry.toml file to $(repr(registry_toml_path))")
 
+if length(ARGS) > 0
+    if strip(lowercase(ARGS[1])) == "nocommit"
+        @warn("exiting prematurely")
+        exit(64)
+    end
+end
+
 @info("tracking files and staging changes...")
 project_repo = LibGit2.GitRepo(project_root)
 LibGit2.add!(project_repo, "Registry.toml",)
@@ -384,7 +419,16 @@ for i = 1:n
         force = true,
         recursive = true,
         )
-    Pkg.add(name)
+    try
+        Pkg.add(name)
+    catch e
+        if name in packages_from_registries_to_clone_all_packages
+            @warn("ignoring exception: ", e, name,)
+        else
+            @warn("rethrowing exception: ", e, name,)
+            rethrow(e)
+        end
+    end
     try
         Pkg.build(name; verbose = true,)
     catch e1
