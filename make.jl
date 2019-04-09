@@ -15,9 +15,18 @@ open(joinpath(project_root, "STARTED",), "w",) do f
     write(f, "$(repr(Dates.now()))\n",)
 end
 
+@info("loading utils.jl...")
+include(joinpath(project_root,"utils.jl",))
+@info("successfully loaded utils.jl")
+
 @info("parsing `offline.toml`...")
 configuration = Pkg.TOML.parsefile("offline.toml")
 @info("successfully parsed `offline.toml`...")
+
+@info("parsing `broken.packages.toml`...")
+broken_packages = Pkg.TOML.parsefile("broken.packages.toml")
+broken_packages_name = broken_packages["broken"]["packages"]["name"]
+@info("successfully parsed `broken.packages.toml`...")
 
 @info("downloading Project.toml and Manifest.toml files...")
 projects_downloads = String[]
@@ -42,19 +51,10 @@ end
 registries_clones = String[]
 packages_from_registries_to_clone_all_packages = String[]
 for url in configuration["registry"]["include"]
-    tmp = mktempdir()
+    tmp = _retry_function_until_success(
+        () -> _git_clone_registry(url);
+        )
     push!(registries_clones, tmp,)
-    Base.shred!(LibGit2.CachedCredentials()) do creds
-        LibGit2.with(
-            Pkg.GitTools.clone(
-                url,
-                tmp;
-                header = "registry from $(repr(url))",
-                credentials = creds,
-                )
-            ) do repo
-        end
-    end
     registry_toml_file_path = joinpath(
         tmp,
         "Registry.toml",
@@ -159,7 +159,9 @@ for name in packages_to_manifest_process
         force = true,
         recursive = true,
         )
-    Pkg.add(name)
+    _retry_function_until_success(
+        () -> Pkg.add(name);
+        )
     environment_manifest_contents = Pkg.TOML.parsefile(
         joinpath(my_environment, "Manifest.toml",)
         )
@@ -208,6 +210,10 @@ registry_toml = Pkg.TOML.parsefile(joinpath(project_root, "Registry.toml.in"))
 registry_toml["repo"] = project_root
 packages_section = get(registry_toml,"packages",Dict{String,Any}(),)
 exclude = configuration["package"]["exclude"]
+append!(
+    exclude,
+    broken_packages["broken"]["packages"]["name"],
+    )
 branches_to_build = configuration["build"]["branches"]
 branches_to_build_names = collect(keys(branches_to_build))
 n = length(registries_clones)
@@ -276,18 +282,9 @@ for i = 1:n
             if name in packages_to_clone
                 @debug("Cloning package $(j) of $(p)")
                 mkpath(repo_destination)
-                tmp = mktempdir()
-                Base.shred!(LibGit2.CachedCredentials()) do creds
-                    LibGit2.with(
-                        Pkg.GitTools.clone(
-                            original_url,
-                            tmp;
-                            header = "git-repo from $(repr(original_url))",
-                            credentials = creds,
-                            )
-                        ) do repo
-                    end
-                end
+                tmp = _retry_function_until_success(
+                    () -> _git_clone_repo(original_url);
+                    )
                 cp(
                     tmp,
                     repo_destination;
@@ -419,16 +416,9 @@ for i = 1:n
         force = true,
         recursive = true,
         )
-    try
-        Pkg.add(name)
-    catch e
-        if name in packages_from_registries_to_clone_all_packages
-            @warn("ignoring exception: ", e, name,)
-        else
-            @warn("rethrowing exception: ", e, name,)
-            rethrow(e)
-        end
-    end
+    _retry_function_until_success(
+        Pkg.add(name);
+        )
     try
         Pkg.build(name; verbose = true,)
     catch e1
@@ -474,7 +464,9 @@ for i = 1:n
             force = true,
             recursive = true,
             )
-        Pkg.add(Pkg.PackageSpec(name=name, version=version,))
+        _retry_function_until_success(
+            () -> Pkg.add(Pkg.PackageSpec(name=name, version=version,));
+            )
         try
             Pkg.build(name; verbose = true,)
         catch e1
@@ -519,7 +511,9 @@ for i = 1:n
             force = true,
             recursive = true,
             )
-        Pkg.add(Pkg.PackageSpec(name=name, rev=branch,))
+        _retry_function_until_success(
+            () -> Pkg.add(Pkg.PackageSpec(name=name, rev=branch,));
+            )
         try
             Pkg.build(name; verbose = true,)
         catch e1

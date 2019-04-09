@@ -6,13 +6,13 @@ PredictMDFull = ["develop","master",]
 [build.versions]
 PredictMD = [
     "0.26.0",
-    ]
+]
 PredictMDExtra = [
     "0.6.0",
-    ]
+]
 PredictMDFull = [
     "0.6.0",
-    ]
+]
 
 [clone_all_packages_in_registry]
 PredictMDRegistry = "26a550a3-39fe-4af4-af6d-e8814c2b6dd9"
@@ -28,19 +28,19 @@ build = [
     "PredictMD",
     "PredictMDExtra",
     "PredictMDFull",
-    ]
+]
 exclude = [
     "julia",
     "LibGit2",
-    ]
+]
 move_out_of_depot = [
     "JuliaInterpreter",
-    ]
+]
 warmup = [
     "DataDeps",
     "Flux",
     "JuliaInterpreter",
-    ]
+]
 
 [registry]
 include = [
