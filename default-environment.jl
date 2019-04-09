@@ -1,4 +1,4 @@
-import Pkg
+import Pkg;
 
 if !isdir(
         joinpath(
@@ -15,7 +15,7 @@ if !isdir(
             "environments",
             string("v", VERSION.major, ".", VERSION.minor,),
             )
-        )
+        );
 end
 
 Pkg.activate(
@@ -25,4 +25,4 @@ Pkg.activate(
         "environments",
         string("v", VERSION.major, ".", VERSION.minor,),
         )
-    )
+    );
