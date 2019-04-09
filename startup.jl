@@ -1,8 +1,8 @@
-import Pkg
+import Pkg;
 
-pushfirst!(Base.DEPOT_PATH,joinpath(splitpath(@__DIR__)..., "depot",),)
-pushfirst!(Base.DEPOT_PATH,joinpath(homedir(), ".julia",),)
-unique!(Base.DEPOT_PATH)
+pushfirst!(Base.DEPOT_PATH,joinpath(splitpath(@__DIR__)..., "depot",),); 
+pushfirst!(Base.DEPOT_PATH,joinpath(homedir(), ".julia",),); 
+unique!(Base.DEPOT_PATH); 
 
 try
     if !any(
@@ -13,8 +13,8 @@ try
             )
         Pkg.Registry.add(
             Pkg.RegistrySpec(path = joinpath(splitpath(@__DIR__)...),)
-            )
+            );
     end
 catch e
-    @warn("ignoring exception: ", e,)
+    @warn("ignoring exception: ", e,);
 end
