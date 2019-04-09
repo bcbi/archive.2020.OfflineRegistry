@@ -1,3 +1,5 @@
+import Pkg
+
 mutable struct _DummyOutputWrapperStruct{I, F, S, O}
     previous_time_seconds::I
     f::F
@@ -172,7 +174,7 @@ function _retry_function_until_success(
     success_bool::Bool = false
     f_result = nothing
 
-    my_false = dummy_output_wrapper(
+    my_false = _dummy_output_wrapper(
         ;
         f = () -> false,
         interval_seconds = 60,
@@ -243,4 +245,20 @@ function _git_clone_repo(url::AbstractString)::String
         end
     end
     return tmp
+end
+
+function _Pkg_add_name_ignore_julia_version_error(
+        name::AbstractString,
+        )::Nothing
+    try
+        Pkg.add(name)
+    catch e
+        if occursin("Unsatisfiable requirements detected", repr(a)) &&
+                occursin("restricted by julia compatibility", repr(a))
+            @debug("ignoring error: ", e,)
+        else
+            @warn("rethrowing error: ", e,)
+        end
+    end
+    return nothing
 end
