@@ -42,17 +42,12 @@ rm(
     )
 @info("successfully removed Registry.toml")
 
-@info("removing STARTED and FINISHED")
+@info("removing build/")
 rm(
-    joinpath(project_root, "STARTED",);
+    joinpath(project_root, "build",);
     force = true,
     recursive = true,
     )
-rm(
-    joinpath(project_root, "FINISHED",);
-    force = true,
-    recursive = true,
-    )
-@info("successfully removed STARTED and FINISHED")
+@info("successfully removed build/")
 
 cd(original_directory)
