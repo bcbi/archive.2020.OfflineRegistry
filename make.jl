@@ -7,11 +7,12 @@ project_root = joinpath(splitpath(@__DIR__)...)
 cd(project_root)
 
 rm(
-    joinpath(project_root, "STARTED",);
+    joinpath(project_root, "build", "STARTED",);
     force = true,
     recursive = true,
     )
-open(joinpath(project_root, "STARTED",), "w",) do f
+mkpath(joinpath(project_root, "build",))
+open(joinpath(project_root, "build", "STARTED",), "w",) do f
     write(f, "$(repr(Dates.now()))\n",)
 end
 
@@ -591,11 +592,12 @@ unique!(Base.DEPOT_PATH)
 @info("successfully added packages to depot and built packages")
 
 rm(
-    joinpath(project_root, "FINISHED",);
+    joinpath(project_root, "build", "FINISHED",);
     force = true,
     recursive = true,
     )
-open(joinpath(project_root, "FINISHED",), "w",) do f
+mkpath(joinpath(project_root, "build",))
+open(joinpath(project_root, "build", "FINISHED",), "w",) do f
     write(f, "$(repr(Dates.now()))\n",)
 end
 
