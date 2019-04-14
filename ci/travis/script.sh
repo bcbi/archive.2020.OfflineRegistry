@@ -14,7 +14,7 @@ export PATH="${PATH}:${TRAVIS_HOME}/julia/bin"
 
 julia $JULIA_FLAGS -e "VERSION >= v\"0.7.0-DEV.3630\" && using InteractiveUtils; versioninfo()"
 
-ls -la $TRAVIS_BUILD_DIR/build
+ls -la $TRAVIS_BUILD_DIR/build || echo "No such file or directory"
 cat $TRAVIS_BUILD_DIR/build/* || echo "No such file or directory"
 
 date
