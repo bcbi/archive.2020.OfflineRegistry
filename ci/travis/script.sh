@@ -14,16 +14,16 @@ export PATH="${PATH}:${TRAVIS_HOME}/julia/bin"
 
 julia $JULIA_FLAGS -e "VERSION >= v\"0.7.0-DEV.3630\" && using InteractiveUtils; versioninfo()"
 
-cat $TRAVIS_BUILD_DIR/STARTED || echo "The file STARTED does not exist."
-cat $TRAVIS_BUILD_DIR/FINISHED || echo "The file FINISHED does not exist."
+ls -la $TRAVIS_BUILD_DIR/build
+cat $TRAVIS_BUILD_DIR/build/* || echo "No such file or directory"
 
 date
 rm -rf $HOME/.julia
 julia $JULIA_FLAGS $TRAVIS_BUILD_DIR/make.jl
 date
 
-cat $TRAVIS_BUILD_DIR/STARTED
-cat $TRAVIS_BUILD_DIR/FINISHED
+ls -la $TRAVIS_BUILD_DIR/build
+cat $TRAVIS_BUILD_DIR/build/*
 
 rm -rf $HOME/.julia
 julia $JULIA_FLAGS -e '
