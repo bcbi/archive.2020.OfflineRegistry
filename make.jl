@@ -18,7 +18,7 @@ function simple_retry_string(f::Function)::String
             @error("$(exception)", exception=exception,)
         end
     end
-    return result
+    return f_result
 end
 
 rm(
