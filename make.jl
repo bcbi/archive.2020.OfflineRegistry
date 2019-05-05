@@ -6,6 +6,21 @@ original_directory = pwd()
 project_root = joinpath(splitpath(@__DIR__)...)
 cd(project_root)
 
+function simple_retry_string(f::Function)::String
+    need_to_continue::Bool = true
+    f_result::String = ""
+    while need_to_continue
+        try
+            f_result = f()
+            need_to_continue = false
+        catch exception
+            need_to_continue = true
+            @error("$(exception)", exception=exception,)
+        end
+    end
+    return f_result
+end
+
 rm(
     joinpath(project_root, "build", "STARTED",);
     force = true,
@@ -35,7 +50,7 @@ for url in configuration["toml"]["project"]["include"]
     @info("downloading $(repr(url))")
     push!(
         projects_downloads,
-        Base.download(url),
+        simple_retry_string(() -> Base.download(url)),
         )
 end
 manifests_downloads = String[]
@@ -43,7 +58,7 @@ for url in configuration["toml"]["manifest"]["include"]
     @info("downloading $(repr(url))")
     push!(
         manifests_downloads,
-        Base.download(url),
+        simple_retry_string(() -> Base.download(url)),
         )
 end
 @info("successfully downloaded all Project.toml and Manifest.toml files")
