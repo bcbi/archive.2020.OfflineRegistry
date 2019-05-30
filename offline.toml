@@ -4,19 +4,15 @@ PredictMDExtra = ["develop","master",]
 PredictMDFull = ["develop","master",]
 
 [build.versions]
-PredictMD = [
-    "0.28.0",
-]
-PredictMDExtra = [
-    "0.7.0",
-]
-PredictMDFull = [
-    "0.7.0",
-]
+# example:
+# HelloWorld = [
+#     "1.0.0",
+#     "2.0.0",
+# ]
 
 [clone_all_packages_in_registry]
 BCBIRegistry = "26a550a3-39fe-4af4-af6d-e8814c2b6dd9"
-# uncomment the next line to download all packages in the General registry:
+# uncomment the next line to download ALL packages in the General registry:
 # General = "23338594-aafe-5451-b93e-139f81909106"
 
 [git.config.user]
@@ -34,7 +30,6 @@ exclude = [
     "LibGit2",
 ]
 move_out_of_depot = [
-    "JuliaInterpreter",
 ]
 warmup = [
     "DataDeps",
