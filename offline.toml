@@ -50,7 +50,6 @@ include = []
 [toml.project]
 include = [
     "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Project.toml",
-    "https://raw.githubusercontent.com/bcbi/PredictMDAPI.jl/master/Project.toml",
     "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Project.toml",
     "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Project.toml",
 ]
