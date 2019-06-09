@@ -16,6 +16,15 @@ if !isdir(
             string("v", VERSION.major, ".", VERSION.minor,),
             )
         );
+    touch(
+        joinpath(
+            homedir(),
+            ".julia",
+            "environments",
+            string("v", VERSION.major, ".", VERSION.minor,),
+            "Project.toml",
+            )
+        );
 end
 
 Pkg.activate(
