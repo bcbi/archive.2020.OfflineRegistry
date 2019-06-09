@@ -396,8 +396,8 @@ LibGit2.add!(project_repo, "packages",)
 @info("committing changes...")
 commit_msg = "Automated commit made by make.jl on $(repr(Dates.now()))"
 sig = LibGit2.Signature(
-    configuration["git"]["config"]["user"]["name"],
-    configuration["git"]["config"]["user"]["email"],
+    configuration["git"]["config"]["user"]["name"], # TODO: get this info from command line
+    configuration["git"]["config"]["user"]["email"], # TODO: get this info from command line
     )
 LibGit2.commit(project_repo,commit_msg;author = sig,committer = sig,)
 all_project_remotes = LibGit2.remotes(project_repo)
