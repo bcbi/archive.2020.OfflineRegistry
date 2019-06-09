@@ -1,7 +1,8 @@
 [build.branches]
-PredictMD = ["develop","master",]
-PredictMDExtra = ["develop","master",]
-PredictMDFull = ["develop","master",]
+PredictMD = ["master",]
+PredictMDAPI = ["master",]
+PredictMDExtra = ["master",]
+PredictMDFull = ["master",]
 
 [build.versions]
 # example:
@@ -16,12 +17,13 @@ BCBIRegistry = "26a550a3-39fe-4af4-af6d-e8814c2b6dd9"
 # General = "23338594-aafe-5451-b93e-139f81909106"
 
 [git.config.user]
-email = "noreply@aluthge.com"
-name = "Dilum Aluthge"
+email = "noreply@aluthge.com" # TODO: remove this - should specify on command line instead
+name = "Dilum Aluthge" # TODO: remove this - should specify on command line instead
 
 [package]
 build = [
     "PredictMD",
+    "PredictMDAPI",
     "PredictMDExtra",
     "PredictMDFull",
 ]
@@ -29,8 +31,7 @@ exclude = [
     "julia",
     "LibGit2",
 ]
-move_out_of_depot = [
-]
+move_out_of_depot = []
 warmup = [
     "DataDeps",
     "Flux",
@@ -49,11 +50,6 @@ include = []
 [toml.project]
 include = [
     "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Project.toml",
-    "https://raw.githubusercontent.com/bcbi/PredictMD.jl/develop/Project.toml",
     "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Project.toml",
-    "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/develop/Project.toml",
     "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Project.toml",
-    "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/develop/Project.toml",
-    "https://raw.githubusercontent.com/UnofficialJuliaMirror/MirrorUpdater.jl/master/Project.toml",
-    "https://raw.githubusercontent.com/UnofficialJuliaMirrorSnapshots/Snapshots.jl/master/Project.toml",
 ]
