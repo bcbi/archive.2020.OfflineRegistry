@@ -26,7 +26,7 @@
 cd /path/to/desired/location
 git clone https://github.com/DilumAluthge/OfflineRegistry
 cd OfflineRegistry
-export REGISTRY_NAME="MyOfflineRegistry"
+export REGISTRY_NAME="MyAwesomeOfflineRegistry"
 export REGISTRY_UUID="e8565a5e-8849-4686-8239-e2115313d19d" # Don't use this UUID; generate your own
 export GIT_USER_NAME="Myfirstname Mylastname"
 export GIT_USER_EMAIL="someone@example.com"
