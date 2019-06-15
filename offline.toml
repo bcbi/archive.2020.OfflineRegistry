@@ -16,9 +16,9 @@ BCBIRegistry = "26a550a3-39fe-4af4-af6d-e8814c2b6dd9"
 # uncomment the next line to download ALL packages in the General registry:
 # General = "23338594-aafe-5451-b93e-139f81909106"
 
-[git.config.user]
-email = "noreply@aluthge.com" # TODO: remove this - should specify on command line instead
-name = "Dilum Aluthge" # TODO: remove this - should specify on command line instead
+# [git.config.user]
+# email = "noreply@aluthge.com" # TODO: remove this - should specify on command line instead
+# name = "Dilum Aluthge" # TODO: remove this - should specify on command line instead
 
 [package]
 build = [

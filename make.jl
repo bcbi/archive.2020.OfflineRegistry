@@ -2,6 +2,23 @@ import Dates
 import LibGit2
 import Pkg
 
+if length(ARGS) != 4
+    throw(
+        ArgumentError(
+            string(
+                "Syntax: julia make.jl ",
+                "\"REGISTRY_NAME\" \"REGISTRY_UUID\" ",
+                "\"GIT_USER_NAME\" \"GIT_USER_EMAIL\"",
+                )
+            )
+        )
+end
+
+const REGISTRY_NAME = convert(String, strip(ARGS[1]))
+const REGISTRY_UUID = convert(String, strip(ARGS[2]))
+const GIT_USER_NAME = convert(String, strip(ARGS[3]))
+const GIT_USER_EMAIL = convert(String, strip(ARGS[4]))
+
 original_directory = pwd()
 project_root = joinpath(splitpath(@__DIR__)...)
 cd(project_root)
@@ -222,8 +239,13 @@ rm(
     force = true,
     recursive = true,
     )
-registry_toml = Pkg.TOML.parsefile(joinpath(project_root, "Registry.toml.in"))
+# registry_toml = Pkg.TOML.parsefile(joinpath(project_root, "Registry.toml.in"))
 registry_toml["repo"] = project_root
+registry_toml["description"] = """
+This registry allows you to use Julia packages
+ behind a firewall. For help, visit
+ https://github.com/DilumAluthge/OfflineRegistry
+"""
 packages_section = get(registry_toml,"packages",Dict{String,Any}(),)
 exclude = configuration["package"]["exclude"]
 append!(
