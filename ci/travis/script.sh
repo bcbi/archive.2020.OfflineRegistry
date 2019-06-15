@@ -19,7 +19,7 @@ cat $TRAVIS_BUILD_DIR/build/* || echo "No such file or directory"
 
 date
 rm -rf $HOME/.julia
-julia $JULIA_FLAGS $TRAVIS_BUILD_DIR/make.jl
+julia $JULIA_FLAGS $TRAVIS_BUILD_DIR/make.jl "$REGISTRY_NAME" "$REGISTRY_UUID" "$GIT_USER_NAME" "$GIT_USER_EMAIL"
 date
 
 ls -la $TRAVIS_BUILD_DIR/build
