@@ -1,5 +1,11 @@
 import Pkg
 
+function maketempdir()::String
+    dir::String = mktempdir()
+    atexit(() -> rm(dir; force = true, recursive = true,))
+    return dir
+end
+
 mutable struct _DummyOutputWrapperStruct{I, F, S, O}
     previous_time_seconds::I
     f::F
@@ -216,7 +222,7 @@ end
 
 
 function _git_clone_registry(url::AbstractString)::String
-    tmp = mktempdir()
+    tmp = maketempdir()
     Base.shred!(LibGit2.CachedCredentials()) do creds
         LibGit2.with(
             Pkg.GitTools.clone(
@@ -232,7 +238,7 @@ function _git_clone_registry(url::AbstractString)::String
 end
 
 function _git_clone_repo(url::AbstractString)::String
-    tmp = mktempdir()
+    tmp = maketempdir()
     Base.shred!(LibGit2.CachedCredentials()) do creds
         LibGit2.with(
             Pkg.GitTools.clone(

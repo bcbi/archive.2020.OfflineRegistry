@@ -1,6 +1,7 @@
 import Dates
 import LibGit2
 import Pkg
+import UUIDs
 
 if length(ARGS) != 4
     throw(
@@ -16,6 +17,7 @@ end
 
 const REGISTRY_NAME = convert(String, strip(ARGS[1]))
 const REGISTRY_UUID = convert(String, strip(ARGS[2]))
+const registry_uuid_object = UUIDs.UUID(REGISTRY_UUID)
 const GIT_USER_NAME = convert(String, strip(ARGS[3]))
 const GIT_USER_EMAIL = convert(String, strip(ARGS[4]))
 
@@ -240,6 +242,8 @@ rm(
     recursive = true,
     )
 registry_toml = Dict{String, Any}()
+registry_toml["name"] = REGISTRY_NAME
+registry_uuid["uuid"] = REGISTRY_UUID
 registry_toml["repo"] = project_root
 registry_toml["description"] = """
 This registry allows you to use Julia packages
@@ -416,10 +420,10 @@ LibGit2.add!(project_repo, "packages",)
 @info("successfully tracked all files and staged all changes")
 
 @info("committing changes...")
-commit_msg = "Automated commit made by make.jl on $(repr(Dates.now()))"
+commit_msg = "Automated commit made by https://github.com/DilumAluthge/OfflineRegistry on $(repr(Dates.now()))"
 sig = LibGit2.Signature(
-    configuration["git"]["config"]["user"]["name"], # TODO: get this info from command line
-    configuration["git"]["config"]["user"]["email"], # TODO: get this info from command line
+    GIT_USER_NAME,
+    GIT_USER_EMAIL,
     )
 LibGit2.commit(project_repo,commit_msg;author = sig,committer = sig,)
 all_project_remotes = LibGit2.remotes(project_repo)
