@@ -239,7 +239,7 @@ rm(
     force = true,
     recursive = true,
     )
-# registry_toml = Pkg.TOML.parsefile(joinpath(project_root, "Registry.toml.in"))
+registry_toml = Dict{String, Any}()
 registry_toml["repo"] = project_root
 registry_toml["description"] = """
 This registry allows you to use Julia packages
