@@ -12,7 +12,12 @@ branches:
 
 env:
     global:
+        - GIT_USER_EMAIL="bcbi-git@brown.edu"
+        - GIT_USER_NAME="BCBI Machine Account"
         - JULIA_DEBUG="all"
+        - REGISTRY_NAME="BCBIOfflineRegistry"
+        - REGISTRY_UUID="226ccab6-caf5-412c-80c4-6c7e3979fa0f"
+
     matrix:
         - JULIA_VER="1.1"
 

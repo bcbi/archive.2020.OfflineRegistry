@@ -1,9 +1,0 @@
-name = "OfflineRegistry"
-uuid = "5f0113b2-209d-4589-82ac-1def848560e1"
-repo = "https://github.com/DilumAluthge/OfflineRegistry.git"
-
-description = """
-This registry allows you to use Julia packages
- behind a firewall. For help, visit
- https://github.com/DilumAluthge/OfflineRegistry
-"""

@@ -1,6 +1,25 @@
 import Dates
 import LibGit2
 import Pkg
+import UUIDs
+
+if length(ARGS) != 4
+    throw(
+        ArgumentError(
+            string(
+                "Syntax: julia make.jl ",
+                "\"REGISTRY_NAME\" \"REGISTRY_UUID\" ",
+                "\"GIT_USER_NAME\" \"GIT_USER_EMAIL\"",
+                )
+            )
+        )
+end
+
+const MY_REGISTRY_NAME = convert(String, strip(ARGS[1]))
+const MY_REGISTRY_UUID = convert(String, strip(ARGS[2]))
+const MY_REGISTRY_UUID_OBJECT = UUIDs.UUID(MY_REGISTRY_UUID)
+const MY_GIT_USER_NAME = convert(String, strip(ARGS[3]))
+const MY_GIT_USER_EMAIL = convert(String, strip(ARGS[4]))
 
 original_directory = pwd()
 project_root = joinpath(splitpath(@__DIR__)...)
@@ -222,8 +241,15 @@ rm(
     force = true,
     recursive = true,
     )
-registry_toml = Pkg.TOML.parsefile(joinpath(project_root, "Registry.toml.in"))
+registry_toml = Dict{String, Any}()
+registry_toml["name"] = MY_REGISTRY_NAME
+registry_toml["uuid"] = MY_REGISTRY_UUID
 registry_toml["repo"] = project_root
+registry_toml["description"] = """
+This registry allows you to use Julia packages
+ behind a firewall. For help, visit
+ https://github.com/DilumAluthge/OfflineRegistry
+"""
 packages_section = get(registry_toml,"packages",Dict{String,Any}(),)
 exclude = configuration["package"]["exclude"]
 append!(
@@ -394,10 +420,10 @@ LibGit2.add!(project_repo, "packages",)
 @info("successfully tracked all files and staged all changes")
 
 @info("committing changes...")
-commit_msg = "Automated commit made by make.jl on $(repr(Dates.now()))"
+commit_msg = "Automated commit made by https://github.com/DilumAluthge/OfflineRegistry on $(repr(Dates.now()))"
 sig = LibGit2.Signature(
-    configuration["git"]["config"]["user"]["name"], # TODO: get this info from command line
-    configuration["git"]["config"]["user"]["email"], # TODO: get this info from command line
+    MY_GIT_USER_NAME,
+    MY_GIT_USER_EMAIL,
     )
 LibGit2.commit(project_repo,commit_msg;author = sig,committer = sig,)
 all_project_remotes = LibGit2.remotes(project_repo)
