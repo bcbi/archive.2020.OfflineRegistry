@@ -6,7 +6,7 @@ function maketempdir()::String
     return dir
 end
 
-mutable struct _DummyOutputWrapperStruct{I, F, S, O}
+mutable struct DummyOutputWrapperStruct{I, F, S, O}
     previous_time_seconds::I
     f::F
     interval_seconds::I
@@ -14,22 +14,22 @@ mutable struct _DummyOutputWrapperStruct{I, F, S, O}
     io::O
 end
 
-function _DummyOutputWrapperStruct(
+function DummyOutputWrapperStruct(
         ;
         interval_seconds::I = 60,
         initial_offset_seconds::I = interval_seconds,
         f::F,
         dummy_output::S = "This is a dummy line of output",
         io::O = Base.stdout,
-        )::_DummyOutputWrapperStruct{I, F, S, O} where
+        )::DummyOutputWrapperStruct{I, F, S, O} where
             I <: Integer where
             F <: Function where
             S <: AbstractString where
             O <: IO
     current_time_seconds::I = floor(I, time())
     initial_time_seconds::I = current_time_seconds + initial_offset_seconds
-    wrapper_struct::_DummyOutputWrapperStruct{I, F, S} =
-        _DummyOutputWrapperStruct(
+    wrapper_struct::DummyOutputWrapperStruct{I, F, S} =
+        DummyOutputWrapperStruct(
             initial_time_seconds,
             f,
             interval_seconds,
@@ -39,7 +39,7 @@ function _DummyOutputWrapperStruct(
     return wrapper_struct
 end
 
-function (x::_DummyOutputWrapperStruct{I, F, S, O})() where
+function (x::DummyOutputWrapperStruct{I, F, S, O})() where
         I <: Integer where
         F <: Function where
         S <: AbstractString where
@@ -72,8 +72,8 @@ function _dummy_output_wrapper(
             F <: Function where
             S <: AbstractString where
             O <: IO
-    wrapper_struct::_DummyOutputWrapperStruct{I, F, S, O} =
-        _DummyOutputWrapperStruct(
+    wrapper_struct::DummyOutputWrapperStruct{I, F, S, O} =
+        DummyOutputWrapperStruct(
             ;
             f = f,
             interval_seconds = interval_seconds,
