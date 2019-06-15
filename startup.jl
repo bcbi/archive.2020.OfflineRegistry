@@ -2,10 +2,10 @@ import Pkg;
 
 offline_registry_name = Pkg.TOML.parsefile(
     joinpath(splitpath(@__DIR__)..., "Registry.toml")
-    )["name"]
+    )["name"];
 offline_registry_uuid = Pkg.TOML.parsefile(
     joinpath(splitpath(@__DIR__)..., "Registry.toml")
-    )["uuid"]
+    )["uuid"];
 pushfirst!(Base.DEPOT_PATH,joinpath(splitpath(@__DIR__)..., "depot",),);
 pushfirst!(
     Base.DEPOT_PATH,
