@@ -75,7 +75,6 @@ if haskey(configuration["include"], "projects")
             )
     end
 end
-###
 manifests_downloads = String[]
 if haskey(configuration["include"], "manifests")
     for project_toml_table in configuration["include"]["manifests"]
