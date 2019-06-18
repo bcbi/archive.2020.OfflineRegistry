@@ -131,14 +131,14 @@ pkgname_to_branchestobuild = Dict{String, Vector{String}}()
 combinations_to_build = configuration["build"]["packages"]
 for combination in combinations_to_build
     for package in combination
-        if "name" in keys(combination.values)
-            name = combinations_to_build[3][1]["name"]
-            push!(names_from_combinations_to_build, strip(name))
-            if "branch" in keys(combination.values)
+        if "name" in keys(package.values)
+            name = convert(String, strip(package["name"]))
+            push!(names_from_combinations_to_build, name)
+            if "branch" in keys(package.values)
+                branch = convert(String, strip(package["branch"]))
                 if !haskey(pkgname_to_branchestobuild, name)
                     pkgname_to_branchestobuild[name] = String[]
                 end
-                branch = combinations_to_build[3][1]["branch"]
                 push!(pkgname_to_branchestobuild[name], branch)
                 unique!(pkgname_to_branchestobuild[name])
             end
