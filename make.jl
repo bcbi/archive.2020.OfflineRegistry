@@ -65,27 +65,40 @@ broken_packages_name = broken_packages["broken"]["packages"]["name"]
 
 @info("downloading Project.toml and Manifest.toml files...")
 projects_downloads = String[]
-for url in configuration["toml"]["project"]["include"]
-    @info("downloading $(repr(url))")
-    push!(
-        projects_downloads,
-        simple_retry_string(() -> Base.download(url)),
-        )
+if haskey(configuration["include"], "projects")
+    for project_toml_table in configuration["include"]["projects"]
+        url = project_toml_table["url"]
+        @info("downloading $(repr(url))")
+        push!(
+            projects_downloads,
+            simple_retry_string(() -> Base.download(url)),
+            )
+    end
 end
+###
 manifests_downloads = String[]
-for url in configuration["toml"]["manifest"]["include"]
-    @info("downloading $(repr(url))")
-    push!(
-        manifests_downloads,
-        simple_retry_string(() -> Base.download(url)),
-        )
+if haskey(configuration["include"], "manifests")
+    for project_toml_table in configuration["include"]["manifests"]
+        url = project_toml_table["url"]
+        @info("downloading $(repr(url))")
+        push!(
+            manifests_downloads,
+            simple_retry_string(() -> Base.download(url)),
+            )
+    end
 end
 @info("successfully downloaded all Project.toml and Manifest.toml files")
 
 @info("cloning registries...")
 registries_clones = String[]
-packages_from_registries_to_clone_all_packages = String[]
-for url in configuration["registry"]["include"]
+packages_from_registries_to_download_all_packages = String[]
+for registry_toml_table in configuration["include"]["registries"]
+    url = registry_toml_table["url"]
+    download_all_packages = get(
+        registry_toml_table,
+        "download_all_packages",
+        false,
+        )
     tmp = _retry_function_until_success(
         () -> _git_clone_registry(url);
         )
@@ -99,40 +112,47 @@ for url in configuration["registry"]["include"]
         )
     registry_name = registry_toml_file_parsed["name"]
     registry_uuid = registry_toml_file_parsed["uuid"]
-    if registry_name in
-            keys(configuration["clone_all_packages_in_registry"])
-        if registry_uuid ==
-                configuration["clone_all_packages_in_registry"][registry_name]
-            append!(
-                packages_from_registries_to_clone_all_packages,
-                [x["name"] for x in
-                    collect(values(registry_toml_file_parsed["packages"]))],
-                )
-        end
+    if download_all_packages
+        append!(
+            packages_from_registries_to_download_all_packages,
+            [x["name"] for x in
+                collect(values(registry_toml_file_parsed["packages"]))],
+            )
     end
-    unique!(packages_from_registries_to_clone_all_packages)
+    unique!(packages_from_registries_to_download_all_packages)
 end
-unique!(packages_from_registries_to_clone_all_packages)
-sort!(packages_from_registries_to_clone_all_packages)
+unique!(packages_from_registries_to_download_all_packages)
+sort!(packages_from_registries_to_download_all_packages)
 @info("successfully cloned all registries")
 
 @info("processing the manifests of the given packages")
 packages_to_manifest_process = String[]
+names_from_combinations_to_build = String[]
+pkgname_to_branchestobuild = Dict{String, Vector{String}}()
+combinations_to_build = configuration["build"]["packages"]
+for combination in combinations_to_build
+    for package in combination
+        if "name" in keys(combination.values)
+            name = combinations_to_build[3][1]["name"]
+            push!(names_from_combinations_to_build, strip(name))
+            if "branch" in keys(combination.values)
+                if !haskey(pkgname_to_branchestobuild, name)
+                    pkgname_to_branchestobuild[name] = String[]
+                end
+                branch = combinations_to_build[3][1]["branch"]
+                push!(pkgname_to_branchestobuild[name], branch)
+                unique!(pkgname_to_branchestobuild[name])
+            end
+        end
+    end
+end
 append!(
     packages_to_manifest_process,
-    strip.(configuration["package"]["build"]),
+    names_from_packages_include,
     )
 append!(
     packages_to_manifest_process,
-    strip.(configuration["package"]["warmup"]),
-    )
-append!(
-    packages_to_manifest_process,
-    strip.(collect(keys(configuration["build"]["branches"]))),
-    )
-append!(
-    packages_to_manifest_process,
-    strip.(collect(keys(configuration["build"]["versions"]))),
+    strip.(configuration["packages"][]),
     )
 for file in manifests_downloads
     append!(
@@ -215,7 +235,7 @@ sort!(results_of_manifest_processing)
 packages_to_clone = String[]
 append!(
     packages_to_clone,
-    strip.(packages_from_registries_to_clone_all_packages),
+    strip.(packages_from_registries_to_download_all_packages),
     )
 append!(
     packages_to_clone,
@@ -227,10 +247,12 @@ append!(
     )
 unique!(packages_to_clone)
 sort!(packages_to_clone)
-@debug("Packages to clone ($(length(packages_to_clone))): ")
-for i = 1:length(packages_to_clone)
-    @debug("$(i). $(packages_to_clone[i])")
-end
+@debug(
+    "Packages to clone: ",
+    length(packages_to_clone),
+    packages_to_clone,
+    repr(packages_to_clone),
+    )
 rm(
     joinpath(project_root, "packages",);
     force = true,
@@ -251,13 +273,11 @@ This registry allows you to use Julia packages
  https://github.com/DilumAluthge/OfflineRegistry
 """
 packages_section = get(registry_toml,"packages",Dict{String,Any}(),)
-exclude = configuration["package"]["exclude"]
+exclude = configuration["exclude"]["packages"]
 append!(
     exclude,
     broken_packages["broken"]["packages"]["name"],
     )
-branches_to_build = configuration["build"]["branches"]
-branches_to_build_names = collect(keys(branches_to_build))
 n = length(registries_clones)
 for i = 1:n
     registry_root = registries_clones[i]
@@ -332,8 +352,8 @@ for i = 1:n
                     repo_destination;
                     force = true,
                     )
-                if name in branches_to_build_names
-                    branches = branches_to_build[name]
+                if haskey(pkgname_to_branchestobuild, name)
+                    branches = pkgname_to_branchestobuild[name]
                     repo = LibGit2.GitRepo(repo_destination)
                     try
                         all_remotes = LibGit2.remotes(repo)
@@ -406,13 +426,6 @@ open(registry_toml_path, "w") do f
 end
 @info("successfully wrote Registry.toml file to $(repr(registry_toml_path))")
 
-if length(ARGS) > 0
-    if strip(lowercase(ARGS[1])) == "nocommit"
-        @warn("exiting prematurely")
-        exit(64)
-    end
-end
-
 @info("tracking files and staging changes...")
 project_repo = LibGit2.GitRepo(project_root)
 LibGit2.add!(project_repo, "Registry.toml",)
@@ -441,7 +454,7 @@ Pkg.activate(my_environment)
 Pkg.Registry.add(Pkg.RegistrySpec(path=project_root,))
 packages_to_warmup = sort(
     unique(
-        strip.(configuration["package"]["warmup"])
+        strip.(configuration["warmup"]["packages"])
         )
     )
 n = length(packages_to_clone)
@@ -486,100 +499,76 @@ for i = 1:n
             )
     end
 end
-versions_to_build = configuration["build"]["versions"]
-versions_to_build_names = collect(keys(versions_to_build))
-n = length(versions_to_build_names)
+
+combinations_to_build = configuration["build"]["packages"]
+n = length(combinations_to_build)
 for i = 1:n
-    name = versions_to_build_names[i]
-    versions = versions_to_build[name]
-    p = length(versions)
-    for j = 1:p
-        @debug("[package $(i) of $(n)] Building version $(j) of $(p)")
-        version = versions[j]
-        rm(
-            joinpath(my_environment, "Project.toml",);
-            force = true,
-            recursive = true,
-            )
-        rm(
-            joinpath(my_environment, "Manifest.toml",);
-            force = true,
-            recursive = true,
-            )
-        _retry_function_until_success(
-            () -> Pkg.add(Pkg.PackageSpec(name=name, version=version,));
-            )
+    combination_i = combinations_to_build[i]
+    num_packages_in_combination_i = length(combination_i)
+    list_of_packagespecs = Vector{Pkg.PackageSpec}(
+        undef,
+        num_packages_in_combination_i,
+        )
+    for j = 1:num_packages_in_combination_i
+        combination_i_package_j = combination_i[j]
+        my_kwargs_dict = Dict{Symbol, String}()
+        if "name" in keys(combination_i_package_j.values)
+            my_kwargs_dict["name"] = combination_i_package_j["name"]
+        end
+        if "branch" in keys(combination_i_package_j.values)
+            my_kwargs_dict["rev"] = combination_i_package_j["branch"]
+        end
+        if "version" in keys(combination_i_package_j.values)
+            my_kwargs_dict["version"] = combination_i_package_j["version"]
+        end
+        packagespec = Pkg.PackageSpec(; my_kwargs_dict...)
+        list_of_packagespecs[j] = packagespec
+    end
+    @debug(
+        "Building combination $(i) of $(n)",
+        combination,
+        list_of_packagespecs,
+        repr(combination),
+        repr(list_of_packagespecs),
+        )
+    rm(
+        joinpath(my_environment, "Project.toml",);
+        force = true,
+        recursive = true,
+        )
+    rm(
+        joinpath(my_environment, "Manifest.toml",);
+        force = true,
+        recursive = true,
+        )
+    _retry_function_until_success(
+        () -> Pkg.add(list_of_packagespecs);
+        )
+    for ps in list_of_packagespecs
         try
-            Pkg.build(name; verbose = true,)
+            Pkg.build(ps; verbose = true,)
         catch e1
             @warn("ignoring exception: ", e1,)
-        end
-        for package_to_warmup in intersect(
-                packages_to_warmup,
-                keys(
-                    Pkg.TOML.parsefile(
-                        joinpath(my_environment, "Manifest.toml",)
-                        )
-                    ),
-                )
-            Pkg.add(package_to_warmup)
-            try
-                Pkg.build(package_to_warmup; verbose = true,)
-            catch e2
-                @warn("ignoring exception: ", e2,)
-            end
-            Base.eval(
-                Main,
-                Base.Meta.parse("import $(package_to_warmup)"),
-                )
         end
     end
-end
-n = length(branches_to_build_names)
-for i = 1:n
-    name = branches_to_build_names[i]
-    branches = branches_to_build[name]
-    p = length(branches)
-    for j = 1:p
-        @debug("[package $(i) of $(n)] Building branch $(j) of $(p)")
-        branch = branches[j]
-        rm(
-            joinpath(my_environment, "Project.toml",);
-            force = true,
-            recursive = true,
+    for package_to_warmup in intersect(
+            packages_to_warmup,
+            keys(
+                Pkg.TOML.parsefile(
+                    joinpath(my_environment, "Manifest.toml",)
+                    )
+                ),
             )
-        rm(
-            joinpath(my_environment, "Manifest.toml",);
-            force = true,
-            recursive = true,
-            )
-        _retry_function_until_success(
-            () -> Pkg.add(Pkg.PackageSpec(name=name, rev=branch,));
-            )
+        Pkg.add(package_to_warmup)
         try
-            Pkg.build(name; verbose = true,)
-        catch e1
-            @warn("ignoring exception: ", e1,)
+            Pkg.build(package_to_warmup; verbose = true,)
+        catch e2
+            @warn("ignoring exception: ", e2,)
         end
-        for package_to_warmup in intersect(
-                packages_to_warmup,
-                keys(
-                    Pkg.TOML.parsefile(
-                        joinpath(my_environment, "Manifest.toml",)
-                        )
-                    ),
-                )
-            Pkg.add(package_to_warmup)
-            try
-                Pkg.build(package_to_warmup; verbose = true,)
-            catch e2
-                @warn("ignoring exception: ", e2,)
-            end
-            Base.eval(
-                Main,
-                Base.Meta.parse("import $(package_to_warmup)"),
-                )
-        end
+        Base.eval(
+            Main,
+            Base.Meta.parse("import $(package_to_warmup)"),
+            )
     end
 end
 rm(my_environment;force = true,recursive = true,)
@@ -592,7 +581,7 @@ moved_out_of_depot_packages_dir = joinpath(
     moved_out_of_depot_dir,
     "packages",
     )
-move_out_of_depot_list = configuration["package"]["move_out_of_depot"]
+move_out_of_depot_list = configuration["move_out_of_depot"]["packages"]
 unique!(move_out_of_depot_list)
 sort!(move_out_of_depot_list)
 n = length(move_out_of_depot_list)
