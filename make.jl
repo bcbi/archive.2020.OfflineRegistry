@@ -145,13 +145,14 @@ for combination in combinations_to_build
         end
     end
 end
+unique!(names_from_combinations_to_build)
 append!(
     packages_to_manifest_process,
     names_from_combinations_to_build,
     )
 append!(
     packages_to_manifest_process,
-    strip.(configuration["packages"][]),
+    strip.(configuration["packages"]["warmup"]),
     )
 for file in manifests_downloads
     append!(
