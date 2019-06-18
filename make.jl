@@ -147,7 +147,7 @@ for combination in combinations_to_build
 end
 append!(
     packages_to_manifest_process,
-    names_from_packages_include,
+    names_from_combinations_to_build,
     )
 append!(
     packages_to_manifest_process,
