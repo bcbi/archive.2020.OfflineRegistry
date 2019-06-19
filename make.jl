@@ -86,8 +86,8 @@ end
 registries_clones = String[]
 packages_from_registries_to_clone_all_packages = String[]
 for url in configuration["registry"]["include"]
-    tmp = _retry_function_until_success(
-        () -> _git_clone_registry(url);
+    tmp = retry_function_until_success(
+        () -> git_clone_registry(url);
         )
     push!(registries_clones, tmp,)
     registry_toml_file_path = joinpath(
@@ -194,7 +194,7 @@ for name in packages_to_manifest_process
         force = true,
         recursive = true,
         )
-    _retry_function_until_success(
+    retry_function_until_success(
         () -> _Pkg_add_name_ignore_julia_version_error(name);
         )
     environment_manifest_contents = Pkg.TOML.parsefile(
@@ -324,7 +324,7 @@ for i = 1:n
             if name in packages_to_clone
                 @debug("Cloning package $(j) of $(p)")
                 mkpath(repo_destination)
-                tmp = _retry_function_until_success(
+                tmp = retry_function_until_success(
                     () -> _git_clone_repo(original_url);
                     )
                 cp(
@@ -458,7 +458,7 @@ for i = 1:n
         force = true,
         recursive = true,
         )
-    _retry_function_until_success(
+    retry_function_until_success(
         () -> _Pkg_add_name_ignore_julia_version_error(name);
         )
     try
@@ -506,7 +506,7 @@ for i = 1:n
             force = true,
             recursive = true,
             )
-        _retry_function_until_success(
+        retry_function_until_success(
             () -> Pkg.add(Pkg.PackageSpec(name=name, version=version,));
             )
         try
@@ -553,7 +553,7 @@ for i = 1:n
             force = true,
             recursive = true,
             )
-        _retry_function_until_success(
+        retry_function_until_success(
             () -> Pkg.add(Pkg.PackageSpec(name=name, rev=branch,));
             )
         try

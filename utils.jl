@@ -60,7 +60,7 @@ function (x::DummyOutputWrapperStruct{I, F, S, O})() where
     return f_result
 end
 
-function _dummy_output_wrapper(
+function dummy_output_wrapper(
         ;
         f::F,
         interval_seconds::I = 60,
@@ -87,7 +87,7 @@ function _dummy_output_wrapper(
     return my_wrapper_function
 end
 
-function _command_ran_successfully(
+function command_ran_successfully(
         cmd::Base.AbstractCmd;
         max_attempts::Integer = 10,
         max_seconds_per_attempt::Real = 540,
@@ -172,7 +172,7 @@ function _command_ran_successfully(
     return success_bool
 end
 
-function _retry_function_until_success(
+function retry_function_until_success(
         f::Function;
         max_attempts::Integer = 10,
         seconds_to_wait_between_attempts::Real = 30,
@@ -180,7 +180,7 @@ function _retry_function_until_success(
     success_bool::Bool = false
     f_result = nothing
 
-    my_false = _dummy_output_wrapper(
+    my_false = dummy_output_wrapper(
         ;
         f = () -> false,
         interval_seconds = 60,
@@ -221,7 +221,7 @@ function _retry_function_until_success(
 end
 
 
-function _git_clone_registry(url::AbstractString)::String
+function git_clone_registry(url::AbstractString)::String
     tmp = maketempdir()
     Base.shred!(LibGit2.CachedCredentials()) do creds
         LibGit2.with(
@@ -237,7 +237,7 @@ function _git_clone_registry(url::AbstractString)::String
     return tmp
 end
 
-function _git_clone_repo(url::AbstractString)::String
+function git_clone_repo(url::AbstractString)::String
     tmp = maketempdir()
     Base.shred!(LibGit2.CachedCredentials()) do creds
         LibGit2.with(
@@ -253,7 +253,7 @@ function _git_clone_repo(url::AbstractString)::String
     return tmp
 end
 
-function _Pkg_add_name_ignore_julia_version_error(
+function Pkg_add_name_ignore_julia_version_error(
         name::AbstractString,
         )::Nothing
     try
