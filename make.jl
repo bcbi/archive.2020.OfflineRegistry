@@ -506,7 +506,7 @@ n = length(combinations_to_build)
 for i = 1:n
     combination_i = combinations_to_build[i]
     num_packages_in_combination_i = length(combination_i)
-    list_of_packagespecs = Vector{Pkg.PackageSpec}(
+    list_of_packagespecs = Vector{Pkg.Types.PackageSpec}(
         undef,
         num_packages_in_combination_i,
         )
@@ -514,15 +514,23 @@ for i = 1:n
         combination_i_package_j = combination_i[j]
         my_kwargs_dict = Dict{Symbol, String}()
         if "name" in keys(combination_i_package_j.values)
-            my_kwargs_dict["name"] = combination_i_package_j["name"]
+            my_kwargs_dict[:name] = strip(
+                combination_i_package_j["name"]
+                )
         end
         if "branch" in keys(combination_i_package_j.values)
-            my_kwargs_dict["rev"] = combination_i_package_j["branch"]
+            my_kwargs_dict[:rev] = strip(
+                combination_i_package_j["branch"]
+                )
         end
         if "version" in keys(combination_i_package_j.values)
-            my_kwargs_dict["version"] = combination_i_package_j["version"]
+            my_kwargs_dict[:version] = strip(
+                combination_i_package_j["version"]
+                )
         end
-        packagespec = Pkg.PackageSpec(; my_kwargs_dict...)
+        if length(my_kwargs_dict) > 0
+            packagespec = Pkg.PackageSpec(; my_kwargs_dict...)
+        end
         list_of_packagespecs[j] = packagespec
     end
     @debug(
