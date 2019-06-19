@@ -180,7 +180,7 @@ function retry_function_until_success(
     success_bool::Bool = false
     f_result = nothing
 
-    my_false = _dummy_output_wrapper(
+    my_false = dummy_output_wrapper(
         ;
         f = () -> false,
         interval_seconds = 60,
