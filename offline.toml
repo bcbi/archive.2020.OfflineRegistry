@@ -15,6 +15,9 @@ packages = [
 [build]
 packages = [
     [
+        { name = "PredictMDAPI"},
+    ],
+    [
         { name = "PredictMD"},
         { name = "PredictMDExtra"},
         { name = "PredictMDFull"},
