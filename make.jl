@@ -87,7 +87,7 @@ registries_clones = String[]
 packages_from_registries_to_clone_all_packages = String[]
 for url in configuration["registry"]["include"]
     tmp = retry_function_until_success(
-        () -> _git_clone_registry(url);
+        () -> git_clone_registry(url);
         )
     push!(registries_clones, tmp,)
     registry_toml_file_path = joinpath(
