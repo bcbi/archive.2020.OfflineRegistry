@@ -199,7 +199,8 @@ empty!(Base.DEPOT_PATH)
 pushfirst!(Base.DEPOT_PATH, my_depot,)
 Pkg.activate(my_environment)
 results_of_manifest_processing = String[]
-for url in configuration["registry"]["include"]
+for registry_toml_table in configuration["include"]["registries"]
+    url = registry_toml_table["url"]
     Pkg.Registry.add(Pkg.RegistrySpec(url=url,))
 end
 Pkg.Registry.update()
