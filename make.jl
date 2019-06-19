@@ -216,7 +216,7 @@ for name in packages_to_manifest_process
         recursive = true,
         )
     retry_function_until_success(
-        () -> _Pkg_add_name_ignore_julia_version_error(name);
+        () -> Pkg_add_name_ignore_julia_version_error(name);
         )
     environment_manifest_contents = Pkg.TOML.parsefile(
         joinpath(my_environment, "Manifest.toml",)
@@ -473,7 +473,7 @@ for i = 1:n
         recursive = true,
         )
     retry_function_until_success(
-        () -> _Pkg_add_name_ignore_julia_version_error(name);
+        () -> Pkg_add_name_ignore_julia_version_error(name);
         )
     try
         Pkg.build(name; verbose = true,)
