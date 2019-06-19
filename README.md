@@ -1,10 +1,10 @@
 # OfflineRegistry
 
-<a href="https://www.repostatus.org/#active">
-<img src="https://www.repostatus.org/badges/latest/active.svg"
-alt="Project Status: Active – The project has reached a stable,
-usable state and is being actively developed."
-/></a> <a
+<a
+href="https://bors.tech">
+<img
+src="https://bors.tech/images/badge_small.svg"/>
+</a> <a
 href="https://travis-ci.com/DilumAluthge/OfflineRegistry/branches">
 <img
 src="https://travis-ci.com/DilumAluthge/OfflineRegistry.svg?branch=master"/>
