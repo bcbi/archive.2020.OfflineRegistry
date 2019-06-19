@@ -346,7 +346,7 @@ for i = 1:n
                 @debug("Cloning package $(j) of $(p)")
                 mkpath(repo_destination)
                 tmp = retry_function_until_success(
-                    () -> _git_clone_repo(original_url);
+                    () -> git_clone_repo(original_url);
                     )
                 cp(
                     tmp,
