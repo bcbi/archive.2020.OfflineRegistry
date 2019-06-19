@@ -152,7 +152,7 @@ append!(
     )
 append!(
     packages_to_manifest_process,
-    strip.(configuration["packages"]["warmup"]),
+    strip.(configuration["warmup"]["packages"]),
     )
 for file in manifests_downloads
     append!(
