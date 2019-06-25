@@ -5,7 +5,6 @@ registries = [
 ]
 projects = [
     { url = "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Project.toml" },
-    { url = "https://raw.githubusercontent.com/bcbi/PredictMDAPI.jl/master/Project.toml" },
     { url = "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Project.toml" },
     { url = "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Project.toml" },
 ]
