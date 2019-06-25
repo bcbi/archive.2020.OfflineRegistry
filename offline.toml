@@ -3,7 +3,12 @@ registries = [
     # To download all packages in the General, set download_all_packages to true
     { url = "https://github.com/JuliaRegistries/General", download_all_packages = false },
 ]
-projects = []
+projects = [
+    "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDAPI.jl/master/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Project.toml",
+    "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Project.toml",
+]
 manifests = []
 
 [exclude]
@@ -16,6 +21,9 @@ packages = [
 packages = [
     [
         { name = "PredictMDAPI"},
+    ],
+    [
+        { name = "PredictMDAPI", branch = "master"},
     ],
     [
         { name = "PredictMD"},
