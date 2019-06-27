@@ -24,8 +24,9 @@ try
     if !any(
             [
                 (x.name == offline_registry_name &&
-                    x.uuid == offline_registry_uuid) for
-                    x in Pkg.Types.collect_registries()
+                    (x.uuid == offline_registry_uuid_string ||
+                        x.uuid == offline_registry_uuid)) for
+                            x in Pkg.Types.collect_registries()
                 ]
             )
         Pkg.Registry.add(
