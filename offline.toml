@@ -1,15 +1,17 @@
 [include]
 registries = [
-    # To download all packages in the Julia General registry, set download_all_packages to true
+    # To download all packages in a registry, set download_all_packages to true
     { url = "https://github.com/JuliaRegistries/General.git", download_all_packages = false },
     { url = "https://github.com/bcbi/BCBIRegistry.git", download_all_packages = false },
 ]
 projects = [
-    { url = "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Project.toml" },
-    { url = "https://raw.githubusercontent.com/bcbi/PredictMDExtra.jl/master/Project.toml" },
-    { url = "https://raw.githubusercontent.com/bcbi/PredictMDFull.jl/master/Project.toml" },
+    # Example:
+    # { url = "https://raw.githubusercontent.com/MyGitHubUsername/MyPackage.jl/master/Project.toml" },
 ]
-manifests = []
+manifests = [
+    # Example:
+    # { url = "https://raw.githubusercontent.com/MyGitHubUsername/MyPackage.jl/master/Manifest.toml" },
+]
 
 [exclude]
 packages = [
@@ -20,61 +22,14 @@ packages = [
 [build]
 packages = [
     [
-        { name = "PredictMDAPI"},
+        { name = "Colors"},
+        { name = "JSON"},
+        { name = "StatsBase"},
     ],
-    [
-        { name = "PredictMDAPI", branch = "master"},
-    ],
-    [
-        { name = "PredictMD"},
-        { name = "PredictMDExtra"},
-        { name = "PredictMDFull"},
-    ],
-    [
-        { name = "PredictMD", branch = "master"},
-        { name = "PredictMDExtra", branch = "master"},
-        { name = "PredictMDFull", branch = "master"},
-    ],
-    # Examples:
-    # [
-    #     { name = "Foo"},
-    # ],
-    # [
-    #     { name = "Foo"},
-    #     { name = "Bar"},
-    # ],
-    # [
-    #     { name = "Foo", version = "1.0.0"},
-    # ],
-    # [
-    #     { name = "Bar", version = "2.0.0"},
-    # ],
-    # [
-    #     { name = "Foo", version = "1.0.0"},
-    #     { name = "Bar", version = "3.0.0"},
-    # ],
-    # [
-    #     { name = "Foo", version = "2.0.0"},
-    #     { name = "Bar", version = "4.0.0"},
-    # ],
-    # [
-    #     { name = "Foo", branch = "master"},
-    # ],
-    # [
-    #     { name = "Bar", branch = "master"},
-    # ],
-    # [
-    #     { name = "Foo", branch = "master"},
-    #     { name = "Bar", branch = "master"},
-    # ],
 ]
 
 [warmup]
-packages = [
-    "DataDeps",
-    "Flux",
-    "JuliaInterpreter",
-]
+packages = []
 
 [move_out_of_depot]
 packages = []
