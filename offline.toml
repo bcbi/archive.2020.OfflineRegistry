@@ -1,7 +1,8 @@
 [include]
 registries = [
-    # To download all packages in the General, set download_all_packages to true
-    { url = "https://github.com/JuliaRegistries/General", download_all_packages = false },
+    # To download all packages in the Julia General registry, set download_all_packages to true
+    { url = "https://github.com/JuliaRegistries/General.git", download_all_packages = false },
+    { url = "https://github.com/bcbi/BCBIRegistry.git", download_all_packages = false },
 ]
 projects = [
     { url = "https://raw.githubusercontent.com/bcbi/PredictMD.jl/master/Project.toml" },
