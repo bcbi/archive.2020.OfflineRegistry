@@ -14,7 +14,10 @@ manifests = [
 ]
 
 [exclude]
-packages = []
+packages = [
+    "julia",
+    "LibGit2",
+]
 
 [build]
 packages = [
