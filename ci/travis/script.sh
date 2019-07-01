@@ -30,22 +30,8 @@ julia $JULIA_FLAGS -e '
     include("startup.jl");
     include("default-environment.jl");
     import Pkg;
-    Pkg.add("PredictMD");
-    Pkg.add("PredictMDExtra");
-    Pkg.add("PredictMDFull");
-    Pkg.add("DataFrames");
-    Pkg.add("StatsBase");
-    '
-
-rm -rf $HOME/.julia
-julia $JULIA_FLAGS -e '
-    include("startup.jl");
-    include("default-environment.jl");
-    import Pkg;
-    Pkg.add(Pkg.PackageSpec(name="PredictMD", rev="master",));
-    Pkg.add(Pkg.PackageSpec(name="PredictMDExtra", rev="master",));
-    Pkg.add(Pkg.PackageSpec(name="PredictMDFull", rev="master",));
-    Pkg.add("DataFrames");
+    Pkg.add("Colors");
+    Pkg.add("JSON");
     Pkg.add("StatsBase");
     '
 
