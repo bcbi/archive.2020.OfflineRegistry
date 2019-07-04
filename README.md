@@ -1,14 +1,18 @@
 # OfflineRegistry
 
+<p>
 <a
-href="https://bors.tech">
+href="https://app.bors.tech/repositories/11595">
 <img
-src="https://bors.tech/images/badge_small.svg"/>
-</a> <a
+src="https://bors.tech/images/badge_small.svg"
+alt="Bors enabled">
+</a>
+<a
 href="https://travis-ci.com/DilumAluthge/OfflineRegistry/branches">
 <img
 src="https://travis-ci.com/DilumAluthge/OfflineRegistry.svg?branch=master"/>
 </a>
+</p>
 
 # Usage
 
