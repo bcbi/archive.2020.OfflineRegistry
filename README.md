@@ -8,9 +8,9 @@ src="https://bors.tech/images/badge_small.svg"
 alt="Bors enabled">
 </a>
 <a
-href="https://travis-ci.com/DilumAluthge/OfflineRegistry/branches">
+href="https://travis-ci.com/aluthge/OfflineRegistry/branches">
 <img
-src="https://travis-ci.com/DilumAluthge/OfflineRegistry.svg?branch=master"/>
+src="https://travis-ci.com/aluthge/OfflineRegistry.svg?branch=master"/>
 </a>
 </p>
 
