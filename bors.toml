@@ -7,3 +7,7 @@ status = [
 ]
 
 timeout_sec = 14400
+
+[committer]
+name = "aluthge-bors"
+email = "bors@aluthge.group"
